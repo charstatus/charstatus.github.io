@@ -41,13 +41,13 @@
             // The destination URL to direct someone to.
             const DESTINATION_URL = "http://skymines.ml:3001/";
             // How many milliseconds to wait before considering DESTINATION_URL down.
-            const CONNECT_TIMEOUT_MS = 3000;
+            const CONNECT_TIMEOUT_MS = 8000;
             // How many milliseconds after script load to confirm there was no load errors.
-            const JS_LOAD_TIMEOUT_MS = 3000;
+            const JS_LOAD_TIMEOUT_MS = 8000;
 
             // Attempt to connect to the status page...
             console.log(`attempt to contact ${DESTINATION_URL}, timeout of 3000ms`);
-            let attemptToConnect = fetchWithTimeout(DESTINATION_URL, {
+            fetchWithTimeout(DESTINATION_URL, {
                 timeout: CONNECT_TIMEOUT_MS,
             })
                 .then(sendUserToStatusPage)
@@ -63,7 +63,7 @@
                 addScript("onsrvdown.js"); // dynamically inject onsrvdown.js
                 setTimeout(checkOnSrvLoaded, JS_LOAD_TIMEOUT_MS);
             }
-            
+
             function checkOnSrvLoaded() {
                 console.log("check to ensure onsrvdown loaded");
                 if (
@@ -80,7 +80,7 @@
             }
 
             async function fetchWithTimeout(resource, options = {}) {
-                const { timeout = 3000 } = options;
+                const { timeout = 8000 } = options;
 
                 const controller = new AbortController();
                 const id = setTimeout(() => controller.abort(), timeout);
