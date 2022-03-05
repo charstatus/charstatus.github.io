@@ -1,5 +1,9 @@
 /* load this css if the server is down */
 
+html {
+    background-color: silver;
+}
+
 #osd-centered-container {
     position: absolute;
     top: 50%;
