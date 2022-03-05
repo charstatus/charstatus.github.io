@@ -12,12 +12,25 @@
     </div>
     <script>
       console.log('run test for http://skymines.ml:3001/');
-      fetch('http://skymines.ml:3001/').then(() => {
+      fetchWithTimeout('http://skymines.ml:3001/', {timeout:3000}).then(() => {
         window.location.replace("http://skymines.ml:3001/");
       }).catch(e => {
         console.log('show hidden sec');
         document.getElementById('rooties-uwu').className = '';
       });
+      
+      async function fetchWithTimeout(resource, options = {}) {
+  const { timeout = 8000 } = options;
+  
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  const response = await fetch(resource, {
+    ...options,
+    signal: controller.signal  
+  });
+  clearTimeout(id);
+  return response;
+}
     </script>
   </body>
 </html>
