@@ -45,13 +45,16 @@
                         console.log('check to ensure onsrvdown loaded');
                         if (document.getElementById('onsrvdown-mount').innerHTML === '') {
                             console.log("onsrvdown.js failed to load; display error");
+                            document.getElementById('oninit').classList.add('hidden');
                             document.getElementById('onsrvdown-failed').classList.remove('hidden');
+                        } else {
+                            console.log('onsrvdown.js is loaded; nothing left to do')
                         }
                     }, 3000);
                 });
 
             async function fetchWithTimeout(resource, options = {}) {
-                const { timeout = 8000 } = options;
+                const { timeout = 3000 } = options;
 
                 const controller = new AbortController();
                 const id = setTimeout(() => controller.abort(), timeout);
@@ -65,7 +68,6 @@
 
             function addScript(src) {
                 var s = document.createElement("script");
-                s.setAttribute("id", 'osrd-dynamic-script');
                 s.setAttribute("src", src);
                 document.body.appendChild(s);
             }
