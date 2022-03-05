@@ -4,42 +4,71 @@
 
 <!--
   We use one file of HTML, to avoid external loads. This script
-  should be VERY FAST.
+  should be AS FAST AS POSSIBLE, so that the users will rarely notice it.
 -->
 <html>
-  <head>
-    <style>
-      .hidden { display: none; }
-    </style>
-  </head>
-  <body>
-    <div id="oninit"><p>sending you to the status page...</p></div>
-    <div class="hidden" id="onserverdown">
-      <h1>The SkyMines Status Page is down.</h1>
-      <p>Ah... that was suprising! Did you expect us to have a status page for the status page? Well.. we do.<br/><br/>The status page is currently down. This is most likely due to network issues or maintanence. Check back later.</p>
-    </div>
-    <script>
-      console.log('run test for http://skymines.ml:3001/');
-      fetchWithTimeout('http://skymines.ml:3001/', {timeout:3000}).then(() => {
-        window.location.replace("http://skymines.ml:3001/");
-      }).catch(e => {
-        console.log('show hidden sec');
-        document.getElementById('oninit').classList.add('hidden');
-        document.getElementById('onserverdown').classList.remove('hidden');
-      });
-      
-      async function fetchWithTimeout(resource, options = {}) {
-        const { timeout = 8000 } = options;
-  
-        const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), timeout);
-        const response = await fetch(resource, {
-          ...options,
-          signal: controller.signal  
-        });
-        clearTimeout(id);
-        return response;
-      }
-    </script>
-  </body>
+    <head>
+        <style>
+            /* In this case, we use minimal CSS so that the page loads fast.
+                We can import another CSS file later. */
+            .hidden {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="oninit">Sending you to the status page...</div>
+        <!-- in the very rare case that onsrvdown.js fails to load, display this. -->
+        <div id="onsrvdown-failed" class="hidden">
+            <h1>This is embarrassing...</h1>
+            <p>A few things went wrong in a row.</p>
+            <ul>
+                <li>The status page was unable to load.</li>
+                <li>The status page for the status page was also unable to load.</li>
+            </ul>
+            <p>What are the chances! Please retry loading this page, and if it fails again, notify a developer.</p>
+        </div>
+        <!-- onsrvdown.js mounts here -->
+        <div id="onsrvdown-mount"></div>
+        <script>
+            console.log("attempt to contact http://skymines.ml:3001/, timeout of 3000ms");
+            fetchWithTimeout("http://skymines.ml:3001/", { timeout: 3000 })
+                .then(() => {
+                    console.log("no net error; send user to status page");
+                    // Redirect the user to the status page.
+                    window.location.replace("http://skymines.ml:3001/");
+                })
+                .catch((e) => {
+                    console.log("net error; attempt to load onsrvdown.js");
+                    addScript('onsrvdown.js'); // dynamically inject onsrvdown.js
+                    setTimeout(() => {
+                        console.log('check to ensure onsrvdown loaded');
+                        if (document.getElementById('onsrvdown-mount').innerHTML === '') {
+                            console.log("onsrvdown.js failed to load; display error");
+                            document.getElementById('onsrvdown-failed').classList.remove('hidden');
+                        }
+                    }, 3000);
+                });
+
+            async function fetchWithTimeout(resource, options = {}) {
+                const { timeout = 8000 } = options;
+
+                const controller = new AbortController();
+                const id = setTimeout(() => controller.abort(), timeout);
+                const response = await fetch(resource, {
+                    ...options,
+                    signal: controller.signal,
+                });
+                clearTimeout(id);
+                return response;
+            }
+
+            function addScript(src) {
+                var s = document.createElement("script");
+                s.setAttribute("id", 'osrd-dynamic-script');
+                s.setAttribute("src", src);
+                document.body.appendChild(s);
+            }
+        </script>
+    </body>
 </html>
