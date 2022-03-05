@@ -64,7 +64,9 @@
                  })
                      .then(sendUserToStatusPage)
                      .catch(handleFailedConnection);
-            }else{handleFailedConnection("forced")}
+            }else if(new URLSearchParams(window.location.search).get("fe") == "down"){
+              handleFailedConnection("forced")
+            }else if(new URLSearchParams(window.location.search).get("fe") == "double_down"){ checkOnSrvLoaded() }
 
             function sendUserToStatusPage() {
                 console.log("redirect: Sending user to status page...");
