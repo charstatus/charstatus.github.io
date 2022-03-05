@@ -47,7 +47,7 @@
 
             // Attempt to connect to the status page...
             console.log(
-                `attempt to contact ${DESTINATION_URL}, timeout of 3000ms`
+                `attempt to contact ${DESTINATION_URL}, timeout of ${CONNECT_TIMEOUT_MS}ms`
             );
             fetchWithTimeout(DESTINATION_URL, {
                 timeout: CONNECT_TIMEOUT_MS,
