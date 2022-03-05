@@ -63,6 +63,7 @@
             function handleFailedConnection() {
                 console.log("net: net error; attempt to inject onsrvdown.js");
                 addScript("onsrvdown.js"); // dynamically inject onsrvdown.js
+                document.getElementById("oninit").classList.add("hidden");
                 setTimeout(checkOnSrvLoaded, JS_LOAD_TIMEOUT_MS);
             }
 
