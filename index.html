@@ -59,6 +59,7 @@
             } else if (params.force === "down") {
                 em = "Forced DOWN status by query parameter force=down";
                 handleFailedConnection(em);
+                throw new Error("Error used to jump out of our case.")
             }
 
             // The destination URL to direct someone to.
