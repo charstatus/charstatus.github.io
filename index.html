@@ -47,7 +47,20 @@
         <!-- onsrvdown.js mounts here -->
         <div id="onsrvdown-mount"></div>
         <script>
+            // Allow devmode query parameter to be set.
+            const urlSearchParams = new URLSearchParams(window.location.search);
+            const params = Object.fromEntries(urlSearchParams.entries());
+
             let em;
+
+            if (params.force === "double_down") {
+                checkOnSrvLoaded();
+                throw new Error("Error used to jump out of our case.");
+            } else if (params.force === "down") {
+                em = "Forced DOWN status by query parameter force=down";
+                handleFailedConnection(em);
+            }
+
             // The destination URL to direct someone to.
             const DESTINATION_URL = "https://uptime.charpc.mooo.com/";
             // How many milliseconds to wait before considering DESTINATION_URL down.
