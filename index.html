@@ -47,11 +47,12 @@
         <!-- onsrvdown.js mounts here -->
         <div id="onsrvdown-mount"></div>
         <script>
-            // Allow devmode query parameter to be set.
-            const urlSearchParams = new URLSearchParams(window.location.search);
-            const params = Object.fromEntries(urlSearchParams.entries());
-
             let em;
+
+            // Allow devmode query parameter to be set.
+            const params = Object.fromEntries(
+                new URLSearchParams(window.location.search).entries()
+            );
 
             if (params.force === "double_down") {
                 checkOnSrvLoaded();
@@ -59,7 +60,7 @@
             } else if (params.force === "down") {
                 em = "Forced DOWN status by query parameter force=down";
                 handleFailedConnection(em);
-                throw new Error("Error used to jump out of our case.")
+                throw new Error("Error used to jump out of our case.");
             }
 
             // The destination URL to direct someone to.
