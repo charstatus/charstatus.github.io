@@ -47,7 +47,7 @@
 
             // Attempt to connect to the status page...
             console.log(
-                `attempt to contact ${DESTINATION_URL}, timeout of ${CONNECT_TIMEOUT_MS}ms`
+                `net: attempt to contact ${DESTINATION_URL}, timeout of ${CONNECT_TIMEOUT_MS}ms`
             );
             fetchWithTimeout(DESTINATION_URL, {
                 timeout: CONNECT_TIMEOUT_MS,
@@ -56,28 +56,28 @@
                 .catch(handleFailedConnection);
 
             function sendUserToStatusPage() {
-                console.log("Sending user to status page...");
+                console.log("redirect: Sending user to status page...");
                 window.location.replace("http://skymines.ml:3001/");
             }
 
             function handleFailedConnection() {
-                console.log("net error; attempt to load onsrvdown.js");
+                console.log("net: net error; attempt to inject onsrvdown.js");
                 addScript("onsrvdown.js"); // dynamically inject onsrvdown.js
                 setTimeout(checkOnSrvLoaded, JS_LOAD_TIMEOUT_MS);
             }
 
             function checkOnSrvLoaded() {
-                console.log("check to ensure onsrvdown loaded");
+                console.log("check: check to ensure onsrvdown loaded");
                 if (
                     document.getElementById("onsrvdown-mount").innerHTML === ""
                 ) {
-                    console.log("onsrvdown.js failed to load; display error");
+                    console.log("check: onsrvdown.js failed to load; display error");
                     document.getElementById("oninit").classList.add("hidden");
                     document
                         .getElementById("onsrvdown-failed")
                         .classList.remove("hidden");
                 } else {
-                    console.log("onsrvdown.js is loaded; nothing left to do");
+                    console.log("check: onsrvdown.js is loaded; nothing left to do");
                 }
             }
 

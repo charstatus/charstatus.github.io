@@ -26,7 +26,7 @@ if (doRun) {
     fetch('osd.html').then(function (response) {
         return response.text();
     }).then(function (html) {
-        console.log("injecting osd.html...");
+        console.log("osrd: injecting osd.html...");
         // FIXME: this is very dangerous
         document.getElementById("onsrvdown-mount").innerHTML = html;
     }).catch(function (err) {
