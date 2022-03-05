@@ -3,7 +3,7 @@ console.log("osrd: onsrvdown.js is LOADED!");
 // the connection is possibly slow. make sure that we already haven't made the
 // assumption that we have failed.
 let doRun = true;
-if (document.getElementById("onsrvdown-failed").classList.includes("hidden")) {
+if (!document.getElementById("onsrvdown-failed").classList.contains("hidden")) {
     console.error(
         "The inevitable happened. We thought we didn't load, but we really did... what?"
     );
