@@ -46,7 +46,9 @@
             const JS_LOAD_TIMEOUT_MS = 8000;
 
             // Attempt to connect to the status page...
-            console.log(`attempt to contact ${DESTINATION_URL}, timeout of 3000ms`);
+            console.log(
+                `attempt to contact ${DESTINATION_URL}, timeout of 3000ms`
+            );
             fetchWithTimeout(DESTINATION_URL, {
                 timeout: CONNECT_TIMEOUT_MS,
             })
