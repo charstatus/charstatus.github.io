@@ -53,6 +53,8 @@
             const CONNECT_TIMEOUT_MS = 8000;
             // How many milliseconds after script load to confirm there was no load errors.
             const JS_LOAD_TIMEOUT_MS = 8000;
+          
+            let em;
              
             if(!new URLSearchParams(window.location.search).has("fe")){
                  // Attempt to connect to the status page...
