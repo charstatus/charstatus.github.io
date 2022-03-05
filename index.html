@@ -53,22 +53,29 @@
             const CONNECT_TIMEOUT_MS = 8000;
             // How many milliseconds after script load to confirm there was no load errors.
             const JS_LOAD_TIMEOUT_MS = 8000;
-          
+
             let em;
-             
-            if(!new URLSearchParams(window.location.search).has("fe")){
-                 // Attempt to connect to the status page...
-                 console.log(
-                     `net: attempt to contact ${DESTINATION_URL}, timeout of ${CONNECT_TIMEOUT_MS}ms`
-                 );
-                 fetchWithTimeout(DESTINATION_URL, {
-                     timeout: CONNECT_TIMEOUT_MS,
-                 })
-                     .then(sendUserToStatusPage)
-                     .catch(handleFailedConnection);
-            }else if(new URLSearchParams(window.location.search).get("fe") == "down"){
-              handleFailedConnection("forced")
-            }else if(new URLSearchParams(window.location.search).get("fe") == "double_down"){ checkOnSrvLoaded() }
+
+            if (!new URLSearchParams(window.location.search).has("fe")) {
+                // Attempt to connect to the status page...
+                console.log(
+                    `net: attempt to contact ${DESTINATION_URL}, timeout of ${CONNECT_TIMEOUT_MS}ms`
+                );
+                fetchWithTimeout(DESTINATION_URL, {
+                    timeout: CONNECT_TIMEOUT_MS,
+                })
+                    .then(sendUserToStatusPage)
+                    .catch(handleFailedConnection);
+            } else if (
+                new URLSearchParams(window.location.search).get("fe") == "down"
+            ) {
+                handleFailedConnection("Forced to fail by user. Check query param fe=down.");
+            } else if (
+                new URLSearchParams(window.location.search).get("fe") ==
+                "double_down"
+            ) {
+                checkOnSrvLoaded();
+            }
 
             function sendUserToStatusPage() {
                 console.log("redirect: Sending user to status page...");
