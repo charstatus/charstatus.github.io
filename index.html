@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<!-- The SkyMines Status Page Status Page
+     Written by 0xLogN                    -->
+
+<!--
+  We use one file of HTML, to avoid external loads. This script
+  should be VERY FAST.
+-->
 <html>
   <head>
     <style>
@@ -6,7 +13,7 @@
     </style>
   </head>
   <body>
-    <div id=""
+    <div id="oninit"><p>sending you to the status page...</p></div>
     <div class="hidden" id="onserverdown">
       <h1>The SkyMines Status Page is down.</h1>
       <p>Ah... that was suprising! Did you expect us to have a status page for the status page? Well.. we do.<br/><br/>The status page is currently down. This is most likely due to network issues or maintanence. Check back later.</p>
@@ -17,21 +24,22 @@
         window.location.replace("http://skymines.ml:3001/");
       }).catch(e => {
         console.log('show hidden sec');
-        document.getElementById('onserverdown').className = '';
+        document.getElementById('oninit').classList.add('hidden');
+        document.getElementById('onserverdown').classList.remove('hidden');
       });
       
       async function fetchWithTimeout(resource, options = {}) {
-  const { timeout = 8000 } = options;
+        const { timeout = 8000 } = options;
   
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
-  const response = await fetch(resource, {
-    ...options,
-    signal: controller.signal  
-  });
-  clearTimeout(id);
-  return response;
-}
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+        const response = await fetch(resource, {
+          ...options,
+          signal: controller.signal  
+        });
+        clearTimeout(id);
+        return response;
+      }
     </script>
   </body>
 </html>
