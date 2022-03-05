@@ -72,13 +72,17 @@
                 if (
                     document.getElementById("onsrvdown-mount").innerHTML === ""
                 ) {
-                    console.log("check: onsrvdown.js failed to load; display error");
+                    console.log(
+                        "check: onsrvdown.js failed to load; display error"
+                    );
                     document.getElementById("oninit").classList.add("hidden");
                     document
                         .getElementById("onsrvdown-failed")
                         .classList.remove("hidden");
                 } else {
-                    console.log("check: onsrvdown.js is loaded; nothing left to do");
+                    console.log(
+                        "check: onsrvdown.js is loaded; nothing left to do"
+                    );
                 }
             }
 
