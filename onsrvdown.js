@@ -34,6 +34,12 @@ if (doRun) {
             console.log("osrd: injecting osd.html...");
             // FIXME: this is very dangerous
             document.getElementById("onsrvdown-mount").innerHTML = html;
+            document.getElementById("error-message").innerText = em;
+            document.getElementById("verr").onclick = () => {
+                document
+                    .getElementById("error-message")
+                    .classList.toggle("hidden");
+            };
         })
         .catch(function (err) {
             // There was an error

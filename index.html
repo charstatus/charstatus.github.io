@@ -27,19 +27,27 @@
             <ul>
                 <li>The status page was unable to load.</li>
                 <li>
-                    The file that handles showing the status page error message also failed to load.
+                    The file that handles showing the status page error message
+                    also failed to load.
                 </li>
             </ul>
             <p>
                 What are the chances! Please retry loading this page, and if it
                 fails again, notify a developer.
-                <br/>
-                <b>THIS IS A BUG!</b> Please notify a developer with this error message: <code>charstatus redirect frontend index.html checkOnSrvLoaded failed, onsrvdown did not load or loaded extremely slowly</code>
+                <br />
+                <b>THIS IS A BUG!</b> Please notify a developer with this error
+                message:
+                <code
+                    >charstatus redirect frontend index.html checkOnSrvLoaded
+                    failed, onsrvdown did not load or loaded extremely
+                    slowly</code
+                >
             </p>
         </div>
         <!-- onsrvdown.js mounts here -->
         <div id="onsrvdown-mount"></div>
         <script>
+            let em;
             // The destination URL to direct someone to.
             const DESTINATION_URL = "https://uptime.charpc.mooo.com/";
             // How many milliseconds to wait before considering DESTINATION_URL down.
@@ -62,7 +70,8 @@
                 window.location.replace(DESTINATION_URL);
             }
 
-            function handleFailedConnection() {
+            function handleFailedConnection(e) {
+                em = e;
                 console.log("net: net error; attempt to inject onsrvdown.js");
                 addScript("onsrvdown.js"); // dynamically inject onsrvdown.js
                 document.getElementById("oninit").classList.add("hidden");
