@@ -17,41 +17,67 @@
         </style>
     </head>
     <body>
+        <!-- This div is hidden when the status page fails to load, otherwise we just redirect. -->
         <div id="oninit">Sending you to the status page...</div>
         <!-- in the very rare case that onsrvdown.js fails to load, display this. -->
+        <!-- how even... -->
         <div id="onsrvdown-failed" class="hidden">
             <h1>This is embarrassing...</h1>
             <p>A few things went wrong in a row.</p>
             <ul>
                 <li>The status page was unable to load.</li>
-                <li>The status page for the status page was also unable to load.</li>
+                <li>
+                    The status page for the status page was also unable to load.
+                </li>
             </ul>
-            <p>What are the chances! Please retry loading this page, and if it fails again, notify a developer.</p>
+            <p>
+                What are the chances! Please retry loading this page, and if it
+                fails again, notify a developer.
+            </p>
         </div>
         <!-- onsrvdown.js mounts here -->
         <div id="onsrvdown-mount"></div>
         <script>
-            console.log("attempt to contact http://skymines.ml:3001/, timeout of 3000ms");
-            fetchWithTimeout("http://skymines.ml:3001/", { timeout: 3000 })
-                .then(() => {
-                    console.log("no net error; send user to status page");
-                    // Redirect the user to the status page.
-                    window.location.replace("http://skymines.ml:3001/");
-                })
-                .catch((e) => {
-                    console.log("net error; attempt to load onsrvdown.js");
-                    addScript('onsrvdown.js'); // dynamically inject onsrvdown.js
-                    setTimeout(() => {
-                        console.log('check to ensure onsrvdown loaded');
-                        if (document.getElementById('onsrvdown-mount').innerHTML === '') {
-                            console.log("onsrvdown.js failed to load; display error");
-                            document.getElementById('oninit').classList.add('hidden');
-                            document.getElementById('onsrvdown-failed').classList.remove('hidden');
-                        } else {
-                            console.log('onsrvdown.js is loaded; nothing left to do')
-                        }
-                    }, 3000);
-                });
+            // The destination URL to direct someone to.
+            const DESTINATION_URL = "http://skymines.ml:3001/";
+            // How many milliseconds to wait before considering DESTINATION_URL down.
+            const CONNECT_TIMEOUT_MS = 3000;
+            // How many milliseconds after script load to confirm there was no load errors.
+            const JS_LOAD_TIMEOUT_MS = 3000;
+
+            // Attempt to connect to the status page...
+            console.log(`attempt to contact ${DESTINATION_URL}, timeout of 3000ms`);
+            let attemptToConnect = fetchWithTimeout(DESTINATION_URL, {
+                timeout: CONNECT_TIMEOUT_MS,
+            })
+                .then(sendUserToStatusPage)
+                .catch(handleFailedConnection);
+
+            function sendUserToStatusPage() {
+                console.log("Sending user to status page...");
+                window.location.replace("http://skymines.ml:3001/");
+            }
+
+            function handleFailedConnection() {
+                console.log("net error; attempt to load onsrvdown.js");
+                addScript("onsrvdown.js"); // dynamically inject onsrvdown.js
+                setTimeout(checkOnSrvLoaded, JS_LOAD_TIMEOUT_MS);
+            }
+            
+            function checkOnSrvLoaded() {
+                console.log("check to ensure onsrvdown loaded");
+                if (
+                    document.getElementById("onsrvdown-mount").innerHTML === ""
+                ) {
+                    console.log("onsrvdown.js failed to load; display error");
+                    document.getElementById("oninit").classList.add("hidden");
+                    document
+                        .getElementById("onsrvdown-failed")
+                        .classList.remove("hidden");
+                } else {
+                    console.log("onsrvdown.js is loaded; nothing left to do");
+                }
+            }
 
             async function fetchWithTimeout(resource, options = {}) {
                 const { timeout = 3000 } = options;
@@ -67,7 +93,7 @@
             }
 
             function addScript(src) {
-                var s = document.createElement("script");
+                let s = document.createElement("script");
                 s.setAttribute("src", src);
                 document.body.appendChild(s);
             }
